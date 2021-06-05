@@ -1,11 +1,10 @@
-# gallery_flutter
+# Gallery Flutter App
 
 A new Gallery Flutter project, using Google Photo API
 
 ### Gallery Project Environment
 
-- environment:
-    Flutter sdk: ">=2.7.0 <3.0.0"
+- Environment: Flutter sdk: ">=2.7.0 <3.0.0"
 - Xcode 12.4
 - Android 3.6
 - Ruby 2.7.2
@@ -29,7 +28,7 @@ flutter run --flavor pro -t lib/main_pro.dart
 
 ```
 
-### Build Template Project
+### Build Gallery Project
 
 1. Run the below commannds on the terminal
 
