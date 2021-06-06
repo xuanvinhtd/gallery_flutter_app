@@ -14,9 +14,9 @@ class SplashPage extends StatelessWidget {
     }, child: BlocBuilder<AppBloc, AppState>(builder: (context, state) {
       return Scaffold(
         body: Center(
-          child: state is AppLoad
-              ? Text('Splash Screen')
-              : CircularProgressIndicator(),
+          child: state is AppStart
+              ? Text('Gallery')
+              : const CircularProgressIndicator(),
         ),
       );
     }));

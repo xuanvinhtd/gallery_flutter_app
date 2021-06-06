@@ -11,14 +11,16 @@ import 'package:gallery_app/src/ui/app/app_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gallery_app/src/ui/tabbar/cloud/cubit/cloud_cubit.dart';
+import 'package:gallery_app/src/ui/tabbar/gallery/bloc/gallery_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   final config = AppConfig(
-    appName: 'App Template STG',
+    appName: 'STG - Gallery',
     env: AppEnv.stg,
-    apiBaseUrl: AppConstant.baseUrl,
+    apiBaseUrl: AppConstant.baseStgUrl,
   );
 
   if (Platform.isAndroid) {
@@ -34,11 +36,16 @@ void main() {
           create: (context) => AppRepository(config.apiBaseUrl, config.env),
         ),
       ],
-      child: BlocProvider<AppBloc>(
-        create: (context) {
-          return AppBloc(AppRepository(config.apiBaseUrl, config.env))
-            ..add(AppUpdated(AppInitial()));
-        },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AppBloc>(create: (context) {
+            return AppBloc()..add(AppUpdated(AppInitial()));
+          }),
+          BlocProvider<GalleryCubit>(create: (context) => GalleryCubit()),
+          BlocProvider<CloudCubit>(
+              create: (context) => CloudCubit(
+                  appRepository: AppRepository(config.apiBaseUrl, config.env)))
+        ],
         child: App(config),
       )));
 }

@@ -23,21 +23,21 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   AppConfig get _config => widget.config;
-  AppBlocLocalizationsDelegate _appBlocLocalizationsDelegate;
+  late AppBlocLocalizationsDelegate _appBlocLocalizationsDelegate;
 
   @override
   void initState() {
     super.initState();
     _appBlocLocalizationsDelegate = AppBlocLocalizationsDelegate();
     _appBlocLocalizationsDelegate.forceLocale =
-        AppConstant.locales.first; // I force vi language
+        AppConstant.locales[1]; // I force en language
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: _config.appName,
+      title: _config.appName ?? '',
       theme: lightThemeData,
       darkTheme: dartThemeData,
       localizationsDelegates: [
@@ -49,9 +49,21 @@ class _AppState extends State<App> {
       supportedLocales: AppConstant.locales,
       home: BlocBuilder<AppBloc, AppState>(builder: (context, state) {
         if (state is AppStart) {
-          return BlocProvider<AppBloc>(
-              create: (context) => BlocProvider.of<AppBloc>(context),
-              child: TabPage());
+          return MultiBlocProvider(
+            providers: [
+              // BlocProvider<GalleryCubit>(
+              //   create: (context) =>
+              //       BlocProvider.of<GalleryCubit>(context)..initData(),
+              // ),
+              // BlocProvider<CloudCubit>(
+              //   create: (context) => BlocProvider.of<CloudCubit>(context),
+              // ),
+              BlocProvider<AppBloc>(
+                create: (context) => BlocProvider.of<AppBloc>(context),
+              )
+            ],
+            child: TabPage(),
+          );
         }
         return SplashPage();
       }),

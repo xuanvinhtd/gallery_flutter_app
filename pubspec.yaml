@@ -4,7 +4,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -24,6 +24,10 @@ dependencies:
   pretty_dio_logger: ^1.1.1
   cached_network_image: ^3.0.0
 
+  #Photo
+  photo_manager: ^1.2.1
+  video_player: ^2.1.5
+
   cupertino_icons: ^1.0.3
 
 
@@ -36,3 +40,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:  
+    - assets/icon/empty_icon.png

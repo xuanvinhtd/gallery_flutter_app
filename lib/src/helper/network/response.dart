@@ -22,7 +22,7 @@ class Meta {
       this.pageCount = 0,
       this.hasPreviousPage = false,
       this.hasNextPage = false});
-  factory Meta.fromJson(Map<String, dynamic> jsonData) {
+  factory Meta.fromJson(Map<String, dynamic>? jsonData) {
     if (jsonData == null) return Meta();
     return Meta(
         page: jsonData['page'],
@@ -68,30 +68,27 @@ extension StatusExts on Status {
       case Status.UNKNOWN:
         return 'Không xác định';
     }
-    return 'Không xác định';
   }
 }
 
 class ResponseData<T> {
-  Status status;
-  T data;
-  String message = '';
-  Meta meta;
+  late Status status;
+  late T data;
+  late String message = '';
+  late Meta meta;
 
   bool isSuccess() {
     return status == Status.SUCCESS;
   }
 
   ResponseData.success(this.data,
-      {dynamic response, Map<String, dynamic> jsonMeta}) {
+      {dynamic response, Map<String, dynamic>? jsonMeta}) {
     status = Status.SUCCESS;
     if (response is Map<String, dynamic>) {
-      if (response != null) {
-        final statusCode = response['statusCode'];
-        if (statusCode != null) {
-          status = _mapCodeToState(statusCode);
-          message = response['message'] ?? response['error'];
-        }
+      final statusCode = response['statusCode'];
+      if (statusCode != null) {
+        status = _mapCodeToState(statusCode);
+        message = response['message'] ?? response['error'];
       }
     }
 
@@ -100,7 +97,7 @@ class ResponseData<T> {
       meta = Meta.fromJson(mt);
     }
 
-    message = message?.isEmpty == true ? status.message : message;
+    message = message.isEmpty == true ? status.message : message;
   }
   ResponseData.error(dynamic error) {
     if (error is DioError || error is DioErrorType) {
@@ -150,13 +147,12 @@ class ResponseData<T> {
           if (error.error is SocketException) {
             return Status.NO_INTERNET;
           }
-          switch (error.response.statusCode) {
+          switch (error.response?.statusCode ?? -999) {
             case 400:
               return Status.INVALID_PAGE_NUMBER_ERROR;
             default:
               return Status.ERROR;
           }
-          break;
         case DioErrorType.sendTimeout:
           return Status.TIMEOUT;
       }

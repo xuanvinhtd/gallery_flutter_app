@@ -1,1 +1,1 @@
-enum AppTab { home, search, favorite }
+enum AppTab { photo, cloud }

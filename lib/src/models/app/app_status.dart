@@ -10,7 +10,7 @@ class AppInitial extends AppState {
 
 class AppStart extends AppState {
   final AppTab tab;
-  const AppStart({this.tab = AppTab.home});
+  const AppStart({this.tab = AppTab.photo});
 }
 
 class AppLoad extends AppState {

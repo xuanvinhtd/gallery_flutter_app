@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class APIProvider {
-  Dio _dio;
+  late Dio _dio;
 
   APIProvider(String baseUrl, AppEnv env) {
     var dioOptions = BaseOptions();
@@ -54,8 +54,8 @@ class APIProvider {
   }
 
   Future<dynamic> get(String path,
-      {Map<String, dynamic> params,
-      CancelToken cancelToken,
+      {Map<String, dynamic>? params,
+      CancelToken? cancelToken,
       bool isStub = false}) async {
     _dioOptionsJson(_dio.options);
     _willEnableStub(isStub);
@@ -70,9 +70,9 @@ class APIProvider {
   }
 
   Future<dynamic> post(String path,
-      {Map<String, dynamic> params,
+      {Map<String, dynamic>? params,
       bool isStub = false,
-      CancelToken cancelToken}) async {
+      CancelToken? cancelToken}) async {
     _dioOptionsJson(_dio.options);
     _willEnableStub(isStub);
     final response =
@@ -87,9 +87,9 @@ class APIProvider {
   }
 
   Future<dynamic> put(String path,
-      {Map<String, dynamic> params,
+      {Map<String, dynamic>? params,
       bool isStub = false,
-      CancelToken cancelToken}) async {
+      CancelToken? cancelToken}) async {
     _dioOptionsJson(_dio.options);
     _willEnableStub(isStub);
     final response =
@@ -104,10 +104,10 @@ class APIProvider {
   }
 
   Future<dynamic> postFromData(String path,
-      {FormData formData,
-      int len,
+      {FormData? formData,
+      int len = 0,
       bool isStub = false,
-      CancelToken cancelToken}) async {
+      CancelToken? cancelToken}) async {
     _dioOptionsFormData(_dio.options, len);
     _willEnableStub(isStub);
     final response = await _dio.post(
@@ -130,10 +130,10 @@ class APIProvider {
   }
 
   Future<dynamic> putFromData(String path,
-      {FormData formData,
-      int len,
+      {FormData? formData,
+      int len = 0,
       bool isStub = false,
-      CancelToken cancelToken}) async {
+      CancelToken? cancelToken}) async {
     _dioOptionsFormData(_dio.options, len);
     _willEnableStub(isStub);
     final response = await _dio.put(
@@ -156,7 +156,8 @@ class APIProvider {
   }
 
   void throwIfNoSuccess(Response response) {
-    if (response.statusCode < 200 || response.statusCode > 299) {
+    if (response.statusCode == null) return;
+    if (response.statusCode! < 200 || response.statusCode! > 299) {
       throw HttpException(response);
     }
   }

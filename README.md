@@ -4,8 +4,9 @@ A new Gallery Flutter project, using Google Photo API
 
 ### Gallery Project Environment
 
-- Environment: Flutter sdk: ">=2.7.0 <3.0.0"
+- Environment: Flutter sdk: ">=2.12.0 <3.0.0"
 - Xcode 12.4
+- Visual Studio Code 1.56.2
 - Android 3.6
 - Ruby 2.7.2
 - Pod 1.10.1
@@ -85,7 +86,7 @@ flutter build ios --release --flavor pro
 - The simple manager the photos/videos in the device
 - The simple manager the photos/videos on the Cloud(Use Google Photo API)
 - Create/Delete the album   
-- Upload/Delete/View the photo
+- Upload/Delete/View the photo/video
 
 ### Technique
 - Structure project for Flutter

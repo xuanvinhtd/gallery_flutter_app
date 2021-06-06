@@ -10,8 +10,12 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
 
   static dynamic _notInlinedMessages(_) => {
-        'home': MessageLookupByLibrary.simpleMessage('Trang chủ'),
-        'search': MessageLookupByLibrary.simpleMessage('Tìm kiếm'),
-        'favorite': MessageLookupByLibrary.simpleMessage('Yêu thích')
+        'photos': MessageLookupByLibrary.simpleMessage('Hình ảnh'),
+        'videos': MessageLookupByLibrary.simpleMessage('Videos'),
+        'cloud': MessageLookupByLibrary.simpleMessage('Đám mây'),
+        'album': MessageLookupByLibrary.simpleMessage('Album'),
+        'allMedia': MessageLookupByLibrary.simpleMessage('Tất cả'),
+        'gallery': MessageLookupByLibrary.simpleMessage('Bộ sưu tập ảnh'),
+        'items': MessageLookupByLibrary.simpleMessage('Mục')
       };
 }

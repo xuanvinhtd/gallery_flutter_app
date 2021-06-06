@@ -16,9 +16,9 @@ import 'package:gallery_app/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     final config = AppConfig(
-      appName: 'App Template DEV',
+      appName: 'DEV - Gallery',
       env: AppEnv.dev,
-      apiBaseUrl: AppConstant.baseUrl,
+      apiBaseUrl: AppConstant.baseDevUrl,
     );
     // Build our app and trigger a frame.
     await tester.pumpWidget(App(config));

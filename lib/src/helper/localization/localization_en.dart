@@ -10,8 +10,12 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
 
   static dynamic _notInlinedMessages(_) => {
-        'home': MessageLookupByLibrary.simpleMessage('Home'),
-        'search': MessageLookupByLibrary.simpleMessage('Search'),
-        'favorite': MessageLookupByLibrary.simpleMessage('Favorite')
+        'photos': MessageLookupByLibrary.simpleMessage('Photos'),
+        'videos': MessageLookupByLibrary.simpleMessage('Videos'),
+        'cloud': MessageLookupByLibrary.simpleMessage('Clouds'),
+        'album': MessageLookupByLibrary.simpleMessage('Album'),
+        'allMedia': MessageLookupByLibrary.simpleMessage('All'),
+        'gallery': MessageLookupByLibrary.simpleMessage('Gallery'),
+        'items': MessageLookupByLibrary.simpleMessage('items')
       };
 }
