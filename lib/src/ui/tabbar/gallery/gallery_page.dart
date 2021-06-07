@@ -1,4 +1,5 @@
 import 'package:gallery_app/src/config/app_constant.dart';
+import 'package:gallery_app/src/config/app_routes.dart';
 import 'package:gallery_app/src/helper/localization/app_bloc_localization.dart';
 import 'package:gallery_app/src/models/media/album_item.dart';
 import 'package:gallery_app/src/models/media/media_item.dart';
@@ -25,9 +26,7 @@ class GalleryPage extends StatelessWidget {
       appBar: GLAppBar(
         title: AppLocalization.of(context).gallery,
         actions: [
-          IconButton(onPressed: () {
-            
-          }, icon: Icon(Icons.camera_alt_sharp)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.camera_alt_sharp)),
           _buildPopupMenu(context),
         ],
       ),
@@ -209,9 +208,7 @@ class __ListMediaState extends State<_ListMedia> {
   }
 
   void _onTapAlbum(BuildContext context, AlbumItem item) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MediaListPage(item)),
-    );
+    Navigator.of(context)
+        .pushNamed(AppRoutes.media_list_page, arguments: [item]);
   }
 }

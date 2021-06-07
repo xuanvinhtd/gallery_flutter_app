@@ -5,7 +5,6 @@ import 'package:gallery_app/src/models/view_mode.dart';
 import 'package:gallery_app/src/repository/api/app_repository.dart';
 import 'package:gallery_app/src/ui/app/app_manager.dart';
 import 'package:gallery_app/src/ui/tabbar/cloud/cubit/cloud_state.dart';
-import 'package:gallery_app/src/ui/widgets/gl_album.dart';
 
 class CloudCubit extends Cubit<CloudState> {
   CloudCubit({@required this.appRepository}) : super(CloudState.loading());

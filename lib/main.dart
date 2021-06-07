@@ -1,8 +1,12 @@
 import 'package:gallery_app/src/config/app_constant.dart';
 import 'package:gallery_app/src/config/app_config.dart';
+import 'package:gallery_app/src/config/app_routes.dart';
 import 'package:gallery_app/src/models/app/app_status.dart';
 import 'package:gallery_app/src/helper/localization/app_bloc_localization.dart';
+import 'package:gallery_app/src/repository/api/app_repository.dart';
 import 'package:gallery_app/src/ui/app/app_bloc.dart';
+import 'package:gallery_app/src/ui/media_list/cubit/media_list_cubit.dart';
+import 'package:gallery_app/src/ui/media_list/media_list_page.dart';
 import 'package:gallery_app/src/ui/splash/splash_page.dart';
 
 import 'package:gallery_app/src/config/app_theme.dart';
@@ -47,19 +51,30 @@ class _AppState extends State<App> {
         _appBlocLocalizationsDelegate
       ],
       supportedLocales: AppConstant.locales,
-      home: BlocBuilder<AppBloc, AppState>(builder: (context, state) {
-        if (state is AppStart) {
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider<AppBloc>(
-                create: (context) => BlocProvider.of<AppBloc>(context),
-              )
-            ],
-            child: TabPage(),
+      routes: {
+        AppRoutes.home: (context) {
+          return BlocBuilder<AppBloc, AppState>(builder: (context, state) {
+            if (state is AppStart) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<AppBloc>(
+                    create: (context) => BlocProvider.of<AppBloc>(context),
+                  )
+                ],
+                child: TabPage(),
+              );
+            }
+            return SplashPage();
+          });
+        },
+        AppRoutes.media_list_page: (context) {
+          return BlocProvider<MediaListCubit>(
+            create: (context) => MediaListCubit(
+                appRepository: RepositoryProvider.of<AppRepository>(context)),
+            child: MediaListPage(),
           );
         }
-        return SplashPage();
-      }),
+      },
     );
   }
 }

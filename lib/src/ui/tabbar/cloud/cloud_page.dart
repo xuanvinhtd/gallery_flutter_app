@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gallery_app/src/config/app_routes.dart';
 import 'package:gallery_app/src/helper/localization/app_bloc_localization.dart';
 import 'package:gallery_app/src/models/media/album_item.dart';
 import 'package:gallery_app/src/models/media/media_item.dart';
@@ -145,10 +146,8 @@ class CloudPage extends StatelessWidget {
     final cubit = context.read<CloudCubit>();
     cubit.createAlnum((msg, album) {
       if (msg == null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MediaListPage(album!)),
-        );
+        Navigator.of(context)
+            .pushNamed(AppRoutes.media_list_page, arguments: [album!]);
       } else {
         showErrorDialog(context, msg);
       }
@@ -258,9 +257,7 @@ class _ListMedia extends StatelessWidget {
   }
 
   void _onTapAlbum(BuildContext context, AlbumItem item) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MediaListPage(item)),
-    );
+    Navigator.of(context)
+        .pushNamed(AppRoutes.media_list_page, arguments: [item]);
   }
 }
