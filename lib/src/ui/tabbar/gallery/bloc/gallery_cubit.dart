@@ -90,7 +90,14 @@ class GalleryCubit extends Cubit<GalleryState> {
 
   Future<List<AssetPathEntity>> _fetchData(
       {bool onlyAll = false, RequestType type = RequestType.common}) async {
-    return await PhotoManager.getAssetPathList(onlyAll: onlyAll, type: type);
+    final isPermitted = await PhotoManager.requestPermissionExtend();
+    if (PermissionState.authorized == isPermitted) {
+      emit(state.copyWith(notPermission: false));
+      return await PhotoManager.getAssetPathList(onlyAll: onlyAll, type: type);
+    } else {
+      emit(state.copyWith(notPermission: true, isLoading: false));
+      return [];
+    }
   }
 
   void _loading({bool isLoading = true}) {

@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:gallery_app/src/helper/utility/http/http_exception.dart';
 import 'package:gallery_app/src/models/app/app_env.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:gallery_app/src/ui/app/app_manager.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class APIProvider {
@@ -31,25 +33,22 @@ class APIProvider {
     }
   }
 
-  String _getToken() {
-    return '';
+  Map<String, String> _googleAuthHeaders() {
+    return AppManager().authHeaders ?? {};
   }
 
   BaseOptions _dioOptionsJson(BaseOptions dioOptions) {
-    dioOptions.headers = {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer ${_getToken()}'
-    };
-
+    print("HEADER->${_googleAuthHeaders()}");
+    dioOptions.headers = _googleAuthHeaders();
     return dioOptions;
   }
 
-  BaseOptions _dioOptionsFormData(BaseOptions dioOptions, int len) {
-    dioOptions.headers = {
-      'Content-Type': 'multipart/form-data',
-      Headers.contentLengthHeader: len,
-      'Authorization': 'Bearer ${_getToken()}'
-    };
+  BaseOptions _dioOptionsFormData(
+      BaseOptions dioOptions, int len, String fileName) {
+    dioOptions.headers.addAll(_googleAuthHeaders());
+    dioOptions.headers['Content-type'] = 'application/octet-stream';
+    dioOptions.headers['X-Goog-Upload-Protocol'] = 'raw';
+    dioOptions.headers['X-Goog-Upload-File-Name'] = fileName;
     return dioOptions;
   }
 
@@ -103,42 +102,13 @@ class APIProvider {
     }
   }
 
-  Future<dynamic> postFromData(String path,
-      {FormData? formData,
-      int len = 0,
-      bool isStub = false,
-      CancelToken? cancelToken}) async {
-    _dioOptionsFormData(_dio.options, len);
+  Future<dynamic> uploadData(String path, String fileName, File image,
+      {int len = 0, bool isStub = false, CancelToken? cancelToken}) async {
+    _dioOptionsFormData(_dio.options, len, fileName);
     _willEnableStub(isStub);
     final response = await _dio.post(
       path,
-      data: formData,
-      cancelToken: cancelToken,
-      onSendProgress: (received, total) {
-        if (total != -1) {
-          print((received / total * 100).toStringAsFixed(0) + '%');
-        }
-      },
-    );
-    throwIfNoSuccess(response);
-
-    if (response.data is String) {
-      return jsonDecode(response.data.toString());
-    } else {
-      return response.data;
-    }
-  }
-
-  Future<dynamic> putFromData(String path,
-      {FormData? formData,
-      int len = 0,
-      bool isStub = false,
-      CancelToken? cancelToken}) async {
-    _dioOptionsFormData(_dio.options, len);
-    _willEnableStub(isStub);
-    final response = await _dio.put(
-      path,
-      data: formData,
+      data: image.readAsBytesSync(),
       cancelToken: cancelToken,
       onSendProgress: (received, total) {
         if (total != -1) {

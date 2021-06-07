@@ -7,13 +7,15 @@ import 'package:gallery_app/src/models/view_mode.dart';
 // ignore: must_be_immutable
 class CloudState extends Equatable {
   CloudState(
-      {this.mode = ViewMode.all_media,
+      {this.mode = ViewMode.album,
       this.medias = const [],
       this.albums = const [],
-      this.isLoading = true});
+      this.isLoading = true,
+      this.isLoggedIn = false});
 
   ViewMode mode;
   bool isLoading;
+  bool isLoggedIn;
   List<MediaItem> medias;
   List<AlbumItem> albums;
 
@@ -22,22 +24,15 @@ class CloudState extends Equatable {
 
   CloudState.loading() : this(isLoading: true);
 
-  CloudState.loadAllMedias(List<MediaItem> medias)
-      : this(mode: ViewMode.all_media, medias: medias, isLoading: false);
-  CloudState.loadAllAlbums(List<AlbumItem> albums)
-      : this(mode: ViewMode.album, albums: albums, isLoading: false);
-  CloudState.loadAllPhotos(List<MediaItem> medias)
-      : this(mode: ViewMode.photo, medias: medias, isLoading: false);
-  CloudState.loadAllVideos(List<MediaItem> medias)
-      : this(mode: ViewMode.video, medias: medias, isLoading: false);
-
   CloudState copyWith(
       {ViewMode? mode,
       bool? isLoading,
+      bool? isLoggedIn,
       List<MediaItem>? medias,
       List<AlbumItem>? albums}) {
     return CloudState(
         isLoading: isLoading ?? this.isLoading,
+        isLoggedIn: isLoggedIn ?? this.isLoggedIn,
         mode: mode ?? this.mode,
         medias: medias ?? this.medias,
         albums: albums ?? this.albums);

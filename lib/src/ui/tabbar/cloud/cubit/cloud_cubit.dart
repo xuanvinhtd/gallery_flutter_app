@@ -1,15 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gallery_app/src/models/media/album_item.dart';
+import 'package:gallery_app/src/models/view_mode.dart';
 import 'package:gallery_app/src/repository/api/app_repository.dart';
+import 'package:gallery_app/src/ui/app/app_manager.dart';
 import 'package:gallery_app/src/ui/tabbar/cloud/cubit/cloud_state.dart';
+import 'package:gallery_app/src/ui/widgets/gl_album.dart';
 
 class CloudCubit extends Cubit<CloudState> {
   CloudCubit({@required this.appRepository}) : super(CloudState.loading());
   final AppRepository? appRepository;
+  final AppManager _appManager = AppManager();
 
-  Future<void> fetchAllMedia() async {}
-  Future<void> fetchAllPhoto() async {}
-  Future<void> fetchAllVideo() async {}
-  Future<void> fetchAllAlbum() async {}
+  bool get _isLoggedIn {
+    return _appManager.isLoggedIn();
+  }
+
+  String albumTitle = '';
+
+  void initData() {
+    emit(state.copyWith(isLoggedIn: _isLoggedIn));
+    if (_isLoggedIn) {
+      fetchAllAlbum();
+    }
+  }
+
+  Future<void> signGoogle(Function(String?) callback) async {
+    final result = await _appManager.signIn();
+    print("LOAGIN--> ${result?.id}");
+    if (result == null) {
+      emit(state.copyWith(isLoading: false));
+      callback("Không đặng nhập thành công!");
+    } else {
+      emit(state.copyWith(isLoading: false, isLoggedIn: true));
+      callback(null);
+    }
+  }
+
+  Future<void> createAlnum(Function(String?, AlbumItem?) callback) async {
+    emit(state.copyWith(isLoading: true));
+    final result = await appRepository?.createAlbum(albumTitle);
+    if (result == null || result.data == null) {
+      emit(state.copyWith(isLoading: false));
+    } else {
+      emit(state.copyWith(isLoading: false));
+      if (result.isSuccess()) {
+        callback(null, result.data?.mapToGLAlbum());
+      } else {
+        callback(result.message, null);
+      }
+    }
+  }
+
+  Future<void> fetchAllAlbum() async {
+    emit(state.copyWith(isLoading: true));
+    final result = await appRepository?.listAlbums();
+
+    if (result == null || result.data == null || result.data?.isEmpty == true) {
+      emit(state.copyWith(isLoading: false));
+      return;
+    }
+    if (result.isSuccess()) {
+      final ab = result.data?.map((e) => e.mapToGLAlbum()).toList();
+      emit(state.copyWith(isLoading: false, albums: ab, mode: ViewMode.album));
+    } else {
+      emit(state.copyWith(isLoading: false));
+    }
+  }
+
   Future<void> refreshData() async {}
 }

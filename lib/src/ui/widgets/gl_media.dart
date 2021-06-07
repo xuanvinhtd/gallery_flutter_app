@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_app/src/helper/utility/lur_map.dart';
 import 'package:gallery_app/src/models/media/media_item.dart';
@@ -10,18 +11,47 @@ class GLMedia extends StatelessWidget {
     this.item,
     this.thumbOption,
     this.onTap, {
+    this.coverPhoto,
     Key? key,
   }) : super(key: key);
-  final MediaItem item;
+  final MediaItem? item;
   final Function() onTap;
-  final ThumbOption thumbOption;
+  final ThumbOption? thumbOption;
+  final String? coverPhoto;
 
   @override
   Widget build(BuildContext context) {
-    final file = item.assetsUrl;
-    if (file == null || item.entity == null) return const SizedBox();
+    if (thumbOption == null || item == null) {
+      return Center(
+        child: GestureDetector(
+          onTap: () {
+            onTap();
+          },
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: CachedNetworkImage(
+              imageUrl: '${coverPhoto ?? ''}=w500',
+              progressIndicatorBuilder: (context, url, downloadProgress) {
+                return Center(
+                    child: SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: CircularProgressIndicator(
+                            value: downloadProgress.progress)));
+              },
+              errorWidget: (context, url, error) {
+                return const Icon(Icons.error);
+              },
+            ),
+          ),
+        ),
+      );
+    }
+    final file = item?.assetsUrl;
+    if (file == null || item?.entity == null) return const SizedBox();
 
-    if (item.entity?.type == AssetType.audio) {
+    if (item?.entity?.type == AssetType.audio) {
       return Center(
         child: Icon(
           Icons.audiotrack,
@@ -29,20 +59,20 @@ class GLMedia extends StatelessWidget {
         ),
       );
     }
-    final entity = item.entity;
-    final size = thumbOption.width;
-    final u8List = ImageLruCache.getData(entity!, size, thumbOption.format);
+    final entity = item?.entity;
+    final size = thumbOption!.width;
+    final u8List = ImageLruCache.getData(entity!, size, thumbOption!.format);
 
     if (u8List != null) {
       return _buildItemWidget(entity, u8List, size, context);
     } else {
       return FutureBuilder<Uint8List?>(
-        future: entity.thumbDataWithOption(thumbOption),
+        future: entity.thumbDataWithOption(thumbOption!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data != null) {
             ImageLruCache.setData(
-                entity, size, thumbOption.format, snapshot.data!);
+                entity, size, thumbOption!.format, snapshot.data!);
             return _buildItemWidget(entity, snapshot.data!, size, context);
           }
           return Center(

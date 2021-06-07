@@ -13,7 +13,7 @@ class GLAlbum extends StatelessWidget {
     Key? key,
   }) : super(key: key);
   final AlbumItem? item;
-  final ThumbOption thumbOption;
+  final ThumbOption? thumbOption;
   final Function() onTap;
 
   @override
@@ -24,9 +24,14 @@ class GLAlbum extends StatelessWidget {
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: GLMedia(item?.items.first ?? MediaItem(), thumbOption, () {
-              onTap();
-            }),
+            child: GLMedia(
+              item?.items.isEmpty == true ? null : item?.items.first,
+              thumbOption,
+              () {
+                onTap();
+              },
+              coverPhoto: item?.coverUrl,
+            ),
           ),
         ),
         const SizedBox(

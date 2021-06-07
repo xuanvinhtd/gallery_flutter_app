@@ -9,6 +9,7 @@ class Meta {
   final int total;
   final int pageCount;
   final bool hasPreviousPage;
+  final String nextPageToken;
   bool hasNextPage;
 
   bool get hasReachedMax {
@@ -21,7 +22,8 @@ class Meta {
       this.total = 0,
       this.pageCount = 0,
       this.hasPreviousPage = false,
-      this.hasNextPage = false});
+      this.hasNextPage = false,
+      this.nextPageToken = ''});
   factory Meta.fromJson(Map<String, dynamic>? jsonData) {
     if (jsonData == null) return Meta();
     return Meta(
@@ -30,7 +32,8 @@ class Meta {
         total: jsonData['total'],
         pageCount: jsonData['pageCount'],
         hasPreviousPage: jsonData['hasPreviousPage'],
-        hasNextPage: jsonData['hasNextPage']);
+        hasNextPage: jsonData['hasNextPage'],
+        nextPageToken: jsonData['nextPageToken']);
   }
 }
 
@@ -73,7 +76,7 @@ extension StatusExts on Status {
 
 class ResponseData<T> {
   late Status status;
-  late T data;
+  T? data;
   late String message = '';
   late Meta meta;
 
@@ -83,6 +86,7 @@ class ResponseData<T> {
 
   ResponseData.success(this.data,
       {dynamic response, Map<String, dynamic>? jsonMeta}) {
+    print("DAIAI--> ${this.data}");
     status = Status.SUCCESS;
     if (response is Map<String, dynamic>) {
       final statusCode = response['statusCode'];
@@ -93,8 +97,7 @@ class ResponseData<T> {
     }
 
     if (jsonMeta != null) {
-      final mt = jsonMeta['data']['meta'];
-      meta = Meta.fromJson(mt);
+      meta = Meta.fromJson(jsonMeta);
     }
 
     message = message.isEmpty == true ? status.message : message;

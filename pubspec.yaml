@@ -22,15 +22,22 @@ dependencies:
   #Network
   dio: ^4.0.0
   pretty_dio_logger: ^1.1.1
-  cached_network_image: ^3.0.0
 
   #Photo
   photo_manager: ^1.2.1
   video_player: ^2.1.5
+  cached_network_image: ^3.0.0
+
+  #Google
+  google_sign_in: ^5.0.2
+  image_picker: ^0.7.4
+
+  path: any
+  loading_overlay: ^0.3.0
 
   cupertino_icons: ^1.0.3
 
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

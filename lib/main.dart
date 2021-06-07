@@ -51,13 +51,6 @@ class _AppState extends State<App> {
         if (state is AppStart) {
           return MultiBlocProvider(
             providers: [
-              // BlocProvider<GalleryCubit>(
-              //   create: (context) =>
-              //       BlocProvider.of<GalleryCubit>(context)..initData(),
-              // ),
-              // BlocProvider<CloudCubit>(
-              //   create: (context) => BlocProvider.of<CloudCubit>(context),
-              // ),
               BlocProvider<AppBloc>(
                 create: (context) => BlocProvider.of<AppBloc>(context),
               )

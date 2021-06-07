@@ -24,7 +24,12 @@ class GalleryPage extends StatelessWidget {
     return Scaffold(
       appBar: GLAppBar(
         title: AppLocalization.of(context).gallery,
-        actions: [_buildPopupMenu(context)],
+        actions: [
+          IconButton(onPressed: () {
+            
+          }, icon: Icon(Icons.camera_alt_sharp)),
+          _buildPopupMenu(context),
+        ],
       ),
       body: const _ListMedia(),
     );
@@ -96,11 +101,34 @@ class __ListMediaState extends State<_ListMedia> {
   @override
   Widget build(BuildContext context) {
     final galleyState = context.watch<GalleryCubit>().state;
-    print("REBUIL");
+
     final data = dataSource(galleyState);
     if (galleyState.isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
+      );
+    }
+    if (galleyState.notPermission) {
+      return Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+                  Text('Vui lòng cấp quyền để truy cập thử viện ảnh của bạn!'),
+            ),
+            IconButton(
+                onPressed: () {
+                  PhotoManager.openSetting();
+                },
+                icon: Icon(
+                  Icons.settings,
+                  color: Theme.of(context).primaryColor,
+                ))
+          ],
+        ),
       );
     }
     if (data.isEmpty) {
@@ -171,7 +199,6 @@ class __ListMediaState extends State<_ListMedia> {
     if (item.entity?.type == AssetType.video) {
       mediaUrl = await item.entity?.getMediaUrl() ?? '';
     }
-    print("VIND-> ${mediaUrl}");
     Navigator.push(
       context,
       MaterialPageRoute(

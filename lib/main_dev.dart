@@ -52,7 +52,8 @@ void main() {
               create: (context) => GalleryCubit()..initData()),
           BlocProvider<CloudCubit>(
               create: (context) => CloudCubit(
-                  appRepository: AppRepository(config.apiBaseUrl, config.env)))
+                  appRepository: AppRepository(config.apiBaseUrl, config.env))
+                ..initData())
         ],
         child: App(config),
       )));

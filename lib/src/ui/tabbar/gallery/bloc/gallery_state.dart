@@ -9,15 +9,17 @@ class GalleryState extends Equatable {
       {this.mode = ViewMode.all_media,
       this.medias = const [],
       this.albums = const [],
-      this.isLoading = true});
+      this.isLoading = true,
+      this.notPermission = false});
 
   ViewMode mode;
   bool isLoading;
+  bool notPermission;
   List<MediaItem> medias;
   List<AlbumItem> albums;
 
   @override
-  List<Object> get props => [mode, isLoading, medias, albums];
+  List<Object> get props => [mode, isLoading, medias, albums, notPermission];
 
   GalleryState.loading() : this(isLoading: true);
 
@@ -32,12 +34,14 @@ class GalleryState extends Equatable {
   GalleryState copyWith(
       {ViewMode? mode,
       bool? isLoading,
+      bool? notPermission,
       List<MediaItem>? medias,
       List<AlbumItem>? albums}) {
     return GalleryState(
         isLoading: isLoading ?? this.isLoading,
         mode: mode ?? this.mode,
         medias: medias ?? this.medias,
-        albums: albums ?? this.albums);
+        albums: albums ?? this.albums,
+        notPermission: notPermission ?? this.notPermission);
   }
 }
