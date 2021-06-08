@@ -7,7 +7,7 @@ import 'package:gallery_app/src/models/view_mode.dart';
 // ignore: must_be_immutable
 class CloudState extends Equatable {
   CloudState(
-      {this.mode = ViewMode.album,
+      {this.mode = ViewMode.all_media,
       this.medias = const [],
       this.albums = const [],
       this.isLoading = true,

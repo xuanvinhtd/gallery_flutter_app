@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:gallery_app/src/config/app_constant.dart';
 import 'package:gallery_app/src/config/app_routes.dart';
 import 'package:gallery_app/src/helper/localization/app_bloc_localization.dart';
@@ -7,18 +9,21 @@ import 'package:gallery_app/src/models/view_mode.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gallery_app/src/ui/media_list/media_list_page.dart';
 import 'package:gallery_app/src/ui/preview/photo/photo_preview_page.dart';
 import 'package:gallery_app/src/ui/preview/video/video_preview_page.dart';
 import 'package:gallery_app/src/ui/tabbar/gallery/bloc/gallery_cubit.dart';
 import 'package:gallery_app/src/ui/tabbar/gallery/bloc/gallery_state.dart';
 import 'package:gallery_app/src/ui/widgets/gl_album.dart';
 import 'package:gallery_app/src/ui/widgets/gl_app_bar.dart';
+import 'package:gallery_app/src/ui/widgets/gl_error_dialog.dart';
 import 'package:gallery_app/src/ui/widgets/gl_media.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class GalleryPage extends StatelessWidget {
-  const GalleryPage({Key? key}) : super(key: key);
+  GalleryPage({Key? key}) : super(key: key);
+
+  final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,11 @@ class GalleryPage extends StatelessWidget {
       appBar: GLAppBar(
         title: AppLocalization.of(context).gallery,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.camera_alt_sharp)),
+          IconButton(
+              onPressed: () {
+                _onImageButtonPressed(ImageSource.camera, context);
+              },
+              icon: Icon(Icons.camera_alt_sharp)),
           _buildPopupMenu(context),
         ],
       ),
@@ -78,6 +87,20 @@ class GalleryPage extends StatelessWidget {
       default:
         break;
     }
+  }
+
+  void _onImageButtonPressed(ImageSource source, BuildContext context) async {
+    try {
+      _picker.getImage(source: source, imageQuality: 100).then((value) {
+        if (value == null) {
+          return;
+        }
+        final file = File(value.path);
+        context.read<GalleryCubit>().saveMedia(file);
+      }).onError((error, stackTrace) {
+        showErrorDialog(context, error.toString());
+      });
+    } catch (e) {}
   }
 }
 
@@ -209,6 +232,6 @@ class __ListMediaState extends State<_ListMedia> {
 
   void _onTapAlbum(BuildContext context, AlbumItem item) {
     Navigator.of(context)
-        .pushNamed(AppRoutes.media_list_page, arguments: [item]);
+        .pushNamed(AppRoutes.mediaListPage, arguments: [item, false]);
   }
 }

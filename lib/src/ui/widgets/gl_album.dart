@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_app/src/helper/localization/app_bloc_localization.dart';
 import 'package:gallery_app/src/models/media/album_item.dart';
-import 'package:gallery_app/src/models/media/media_item.dart';
 import 'package:gallery_app/src/ui/widgets/gl_media.dart';
 import 'package:photo_manager/photo_manager.dart';
 

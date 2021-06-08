@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gallery_app/src/config/app_constant.dart';
 import 'package:gallery_app/src/models/media/album_item.dart';
 import 'package:gallery_app/src/models/media/media_item.dart';
 import 'package:gallery_app/src/models/view_mode.dart';
 import 'package:gallery_app/src/ui/tabbar/gallery/bloc/gallery_state.dart';
 import 'package:photo_manager/photo_manager.dart';
+
+import 'package:path/path.dart' as path;
 
 class GalleryCubit extends Cubit<GalleryState> {
   GalleryCubit() : super(GalleryState.loading());
@@ -102,5 +107,19 @@ class GalleryCubit extends Cubit<GalleryState> {
 
   void _loading({bool isLoading = true}) {
     emit(state.copyWith(isLoading: isLoading));
+  }
+
+  void saveMedia(
+    File file,
+  ) async {
+    _loading();
+    final extensionFile = file.path.split('.').last;
+    if (AppConstant.imageTypes.contains(extensionFile)) {
+      await PhotoManager.editor.saveImage(file.readAsBytesSync());
+    } else {
+      await PhotoManager.editor.saveVideo(file);
+    }
+    _loading(isLoading: false);
+    _fetchAll(ViewMode.all_media);
   }
 }

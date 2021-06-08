@@ -24,7 +24,6 @@ class GAlbum {
     );
   }
   AlbumItem mapToGLAlbum() {
-    print('TITLE-> ${this.title}');
     return AlbumItem(
         id: this.id,
         count: this.mediaItemsCount.isNotEmpty

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class GLAppBar extends StatelessWidget with PreferredSizeWidget {
-  const GLAppBar({Key? key, this.title, this.actions = const []})
+  const GLAppBar(
+      {Key? key,
+      this.title,
+      this.actions = const [],
+      this.isEnableBackButton = false,
+      this.onPressed})
       : preferredSize = const Size.fromHeight(50.0),
         super(key: key);
 
@@ -10,6 +15,8 @@ class GLAppBar extends StatelessWidget with PreferredSizeWidget {
 
   final String? title;
   final List<Widget> actions;
+  final bool isEnableBackButton;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +28,17 @@ class GLAppBar extends StatelessWidget with PreferredSizeWidget {
               .bodyText1
               ?.copyWith(color: Theme.of(context).primaryColor)),
       automaticallyImplyLeading: true,
+      leading: isEnableBackButton
+          ? IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+              ),
+              onPressed: onPressed ??
+                  () {
+                    Navigator.pop(context);
+                  },
+            )
+          : null,
       centerTitle: true,
       actions: actions,
     );

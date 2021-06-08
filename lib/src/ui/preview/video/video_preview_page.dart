@@ -33,6 +33,7 @@ class _VideoPreviewState extends State<VideoPreview> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GLAppBar(
+        isEnableBackButton: true,
         title: media.name,
       ),
       body: Center(

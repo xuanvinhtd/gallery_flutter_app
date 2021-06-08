@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_app/src/config/app_constant.dart';
 
+// ignore: must_be_immutable
 class GLButton extends StatelessWidget {
   GLButton(this.text,
       {Key? key,

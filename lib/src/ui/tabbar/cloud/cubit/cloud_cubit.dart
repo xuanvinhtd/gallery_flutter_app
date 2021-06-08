@@ -20,18 +20,18 @@ class CloudCubit extends Cubit<CloudState> {
   void initData() {
     emit(state.copyWith(isLoggedIn: _isLoggedIn));
     if (_isLoggedIn) {
-      fetchAllAlbum();
+      fetchAllMedia();
     }
   }
 
   Future<void> signGoogle(Function(String?) callback) async {
     final result = await _appManager.signIn();
-    print("LOAGIN--> ${result?.id}");
     if (result == null) {
       emit(state.copyWith(isLoading: false));
       callback("Không đặng nhập thành công!");
     } else {
       emit(state.copyWith(isLoading: false, isLoggedIn: true));
+      fetchAllAlbum();
       callback(null);
     }
   }
@@ -51,21 +51,53 @@ class CloudCubit extends Cubit<CloudState> {
     }
   }
 
-  Future<void> fetchAllAlbum() async {
+  Future<void> fetchAllAlbum({Function(String?)? callback}) async {
     emit(state.copyWith(isLoading: true));
     final result = await appRepository?.listAlbums();
 
     if (result == null || result.data == null || result.data?.isEmpty == true) {
       emit(state.copyWith(isLoading: false));
+      if (callback != null) {
+        callback(null);
+      }
       return;
     }
     if (result.isSuccess()) {
       final ab = result.data?.map((e) => e.mapToGLAlbum()).toList();
+      if (callback != null) {
+        callback(null);
+      }
       emit(state.copyWith(isLoading: false, albums: ab, mode: ViewMode.album));
     } else {
+      if (callback != null) {
+        callback(result.message);
+      }
       emit(state.copyWith(isLoading: false));
     }
   }
 
-  Future<void> refreshData() async {}
+  Future<void> fetchAllMedia({Function(String?)? callback}) async {
+    emit(state.copyWith(isLoading: true));
+    final result = await appRepository?.fetchMediaItems();
+
+    if (result == null || result.data == null || result.data?.isEmpty == true) {
+      emit(state.copyWith(isLoading: false));
+      if (callback != null) {
+        callback(null);
+      }
+      return;
+    }
+    if (result.isSuccess()) {
+      if (callback != null) {
+        callback(null);
+      }
+      emit(state.copyWith(
+          isLoading: false, medias: result.data, mode: ViewMode.all_media));
+    } else {
+      if (callback != null) {
+        callback(result.message);
+      }
+      emit(state.copyWith(isLoading: false));
+    }
+  }
 }

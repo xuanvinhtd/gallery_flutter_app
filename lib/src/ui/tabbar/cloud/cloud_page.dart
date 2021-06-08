@@ -5,7 +5,6 @@ import 'package:gallery_app/src/helper/localization/app_bloc_localization.dart';
 import 'package:gallery_app/src/models/media/album_item.dart';
 import 'package:gallery_app/src/models/media/media_item.dart';
 import 'package:gallery_app/src/models/view_mode.dart';
-import 'package:gallery_app/src/ui/media_list/media_list_page.dart';
 import 'package:gallery_app/src/ui/preview/photo/photo_preview_page.dart';
 import 'package:gallery_app/src/ui/preview/video/video_preview_page.dart';
 import 'package:gallery_app/src/ui/tabbar/cloud/cubit/cloud_cubit.dart';
@@ -40,6 +39,9 @@ class CloudPage extends StatelessWidget {
             }),
         appBar: GLAppBar(
           title: AppLocalization.of(context).cloud,
+          actions: [
+            _buildPopupMenu(context),
+          ],
         ),
         body: BlocBuilder<CloudCubit, CloudState>(builder: (context, state) {
           if (state.isLoggedIn) {
@@ -47,6 +49,32 @@ class CloudPage extends StatelessWidget {
           }
           return const _LoginView();
         }));
+  }
+
+  Widget _buildPopupMenu(BuildContext context) {
+    final theme = Theme.of(context);
+    return PopupMenuButton<ViewMode>(
+      offset: const Offset(0, 20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      icon: Icon(
+        Icons.more_vert,
+        color: theme.primaryColor,
+      ),
+      elevation: 8,
+      onSelected: (value) => _onViewModeChanged(context, value),
+      itemBuilder: (BuildContext context) {
+        final list = [ViewMode.all_media, ViewMode.album]
+            .map((e) => PopupMenuItem(
+                value: e,
+                child: Text(
+                  e.label(context),
+                  style: theme.textTheme.subtitle1
+                      ?.copyWith(color: theme.primaryColor),
+                )))
+            .toList();
+        return list;
+      },
+    );
   }
 
   Future<void> _showInputAlbumNameDialog(BuildContext context) {
@@ -147,11 +175,25 @@ class CloudPage extends StatelessWidget {
     cubit.createAlnum((msg, album) {
       if (msg == null) {
         Navigator.of(context)
-            .pushNamed(AppRoutes.media_list_page, arguments: [album!]);
+            .pushNamed(AppRoutes.mediaListPage, arguments: [album!, true]);
       } else {
         showErrorDialog(context, msg);
       }
     });
+  }
+
+  void _onViewModeChanged(BuildContext context, ViewMode? value) {
+    final cubit = context.read<CloudCubit>();
+    switch (value) {
+      case ViewMode.all_media:
+        cubit.fetchAllMedia();
+        break;
+      case ViewMode.album:
+        cubit.fetchAllAlbum();
+        break;
+      default:
+        break;
+    }
   }
 }
 
@@ -222,9 +264,14 @@ class _ListMedia extends StatelessWidget {
     if (item is AlbumItem) {
       return GLAlbum(item, null, () => _onTapAlbum(context, item));
     } else if (item is MediaItem) {
-      return GLMedia(item, null, () {
-        _onTapMedia(context, item);
-      });
+      return GLMedia(
+        null,
+        null,
+        () {
+          _onTapMedia(context, item);
+        },
+        coverPhoto: item.baseUrl,
+      );
     }
     return const SizedBox();
   }
@@ -257,7 +304,11 @@ class _ListMedia extends StatelessWidget {
   }
 
   void _onTapAlbum(BuildContext context, AlbumItem item) {
-    Navigator.of(context)
-        .pushNamed(AppRoutes.media_list_page, arguments: [item]);
+    Navigator.of(context).pushNamed(AppRoutes.mediaListPage,
+        arguments: [item, true]).then((value) {
+      if (value as bool && value) {
+        context.read<CloudCubit>().fetchAllAlbum();
+      }
+    });
   }
 }

@@ -67,7 +67,7 @@ class _AppState extends State<App> {
             return SplashPage();
           });
         },
-        AppRoutes.media_list_page: (context) {
+        AppRoutes.mediaListPage: (context) {
           return BlocProvider<MediaListCubit>(
             create: (context) => MediaListCubit(
                 appRepository: RepositoryProvider.of<AppRepository>(context)),

@@ -12,23 +12,42 @@ class MediaListCubit extends Cubit<MediaListState> {
 
   File? imageFile;
   bool isInitValue = false;
+  bool hasChange = false;
+
+  bool _isCloud = false;
 
   AlbumItem? _album;
 
-  void initData(AlbumItem ab) {
-    _album = ab;
-    emit(state.copyWith(isLoading: false, album: _album));
+  bool get isCloud {
+    return _isCloud;
   }
 
-  Future<void> addAPhotoToAlbum(Function(String?) callback) async {
+  void initData(AlbumItem ab, bool isCloud) {
+    _album = ab;
+    _isCloud = isCloud;
+    emit(state.copyWith(isLoading: false, album: _album));
+    if (_album != null && isCloud) {
+      fetchMediaItem();
+    }
+  }
+
+  void showLoading() {
+    emit(state.copyWith(isLoading: true));
+  }
+
+  Future<void> addAPhotoToAlbum(
+      File imageFile, Function(String?) callback) async {
     emit(state.copyWith(isLoading: true));
 
-    final result = await appRepository?.uploadMediaItem(imageFile!);
+    final result =
+        await appRepository?.uploadMediaItem(imageFile, _album?.id ?? '');
     if (result == null || result.data == null) {
       emit(state.copyWith(isLoading: false));
     } else {
       emit(state.copyWith(isLoading: false));
       if (result.isSuccess()) {
+        hasChange = true;
+        fetchMediaItem();
         callback(null);
       } else {
         callback(result.message);
@@ -36,19 +55,30 @@ class MediaListCubit extends Cubit<MediaListState> {
     }
   }
 
-  // Future<void> fetchAllAlbum() async {
-  //   emit(state.copyWith(isLoading: true));
-  //   final result = await appRepository?.listAlbums();
+  Future<void> fetchMediaItem({Function(String?)? callback}) async {
+    if (_album == null) return;
+    emit(state.copyWith(isLoading: true));
+    final result = await appRepository?.fetchMeidItemOfAlbums(_album?.id ?? '');
 
-  //   if (result == null || result.data == null || result.data?.isEmpty == true) {
-  //     emit(state.copyWith(isLoading: false));
-  //     return;
-  //   }
-  //   if (result.isSuccess()) {
-  //     final ab = result.data?.map((e) => e.mapToGLAlbum()).toList();
-  //     emit(state.copyWith(isLoading: false, albums: ab, mode: ViewMode.album));
-  //   } else {
-  //     emit(state.copyWith(isLoading: false));
-  //   }
-  // }
+    if (result == null || result.data == null || result.data?.isEmpty == true) {
+      emit(state.copyWith(isLoading: false));
+      if (callback != null) {
+        callback(null);
+      }
+      return;
+    }
+
+    if (result.isSuccess()) {
+      _album = _album?.copyWith(items: result.data);
+      if (callback != null) {
+        callback(null);
+      }
+      emit(state.copyWith(isLoading: false, album: _album));
+    } else {
+      if (callback != null) {
+        callback(result.message);
+      }
+      emit(state.copyWith(isLoading: false));
+    }
+  }
 }

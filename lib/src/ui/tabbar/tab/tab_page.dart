@@ -21,7 +21,7 @@ class _TabPageState extends State<TabPage> {
       if (appState is AppStart) {
         var scaffold = Scaffold(
           body: IndexedStack(
-            children: [const GalleryPage(), const CloudPage()],
+            children: [GalleryPage(), const CloudPage()],
             index: appState.tab.index,
           ),
           bottomNavigationBar: TabSelector(

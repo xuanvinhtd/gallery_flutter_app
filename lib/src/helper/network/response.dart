@@ -86,7 +86,6 @@ class ResponseData<T> {
 
   ResponseData.success(this.data,
       {dynamic response, Map<String, dynamic>? jsonMeta}) {
-    print("DAIAI--> ${this.data}");
     status = Status.SUCCESS;
     if (response is Map<String, dynamic>) {
       final statusCode = response['statusCode'];
