@@ -11,15 +11,15 @@ class CloudCubit extends Cubit<CloudState> {
   final AppRepository? appRepository;
   final AppManager _appManager = AppManager();
 
-  bool get _isLoggedIn {
+  bool get isLoggedIn {
     return _appManager.isLoggedIn();
   }
 
   String albumTitle = '';
 
   void initData() {
-    emit(state.copyWith(isLoggedIn: _isLoggedIn));
-    if (_isLoggedIn) {
+    emit(state.copyWith(isLoggedIn: isLoggedIn));
+    if (isLoggedIn) {
       fetchAllMedia();
     }
   }
@@ -31,7 +31,7 @@ class CloudCubit extends Cubit<CloudState> {
       callback("Không đặng nhập thành công!");
     } else {
       emit(state.copyWith(isLoading: false, isLoggedIn: true));
-      fetchAllAlbum();
+      fetchAllMedia();
       callback(null);
     }
   }

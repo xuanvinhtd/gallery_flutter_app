@@ -22,33 +22,32 @@ class CloudPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: FloatingActionButton(
-            elevation: 5.0,
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            backgroundColor: Theme.of(context).primaryColor,
-            onPressed: () {
-              _showInputAlbumNameDialog(context).then((value) {
-                if (value as bool && value) {
-                  _createAlbum(context);
-                }
-              });
-            }),
-        appBar: GLAppBar(
-          title: AppLocalization.of(context).cloud,
-          actions: [
-            _buildPopupMenu(context),
-          ],
-        ),
-        body: BlocBuilder<CloudCubit, CloudState>(builder: (context, state) {
-          if (state.isLoggedIn) {
-            return _ListMedia();
-          }
-          return const _LoginView();
-        }));
+    return BlocBuilder<CloudCubit, CloudState>(builder: (context, state) {
+      return Scaffold(
+          floatingActionButton: state.isLoggedIn
+              ? FloatingActionButton(
+                  elevation: 5.0,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  onPressed: () {
+                    _showInputAlbumNameDialog(context).then((value) {
+                      if (value as bool && value) {
+                        _createAlbum(context);
+                      }
+                    });
+                  })
+              : null,
+          appBar: GLAppBar(
+            title: AppLocalization.of(context).cloud,
+            actions: [
+              state.isLoggedIn ? _buildPopupMenu(context) : const SizedBox(),
+            ],
+          ),
+          body: state.isLoggedIn ? const _ListMedia() : const _LoginView());
+    });
   }
 
   Widget _buildPopupMenu(BuildContext context) {

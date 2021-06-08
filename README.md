@@ -18,6 +18,8 @@ A new Gallery Flutter project, using Google Photo API
 - Upload a photo/video
 - Preview Photo/Video
 
+* [The video demo this app](https://youtu.be/NEsSlzku0Mo)
+
 ### Technique
 - Structure project for Flutter
 - Config evironment(Dev,Pro, Stg)

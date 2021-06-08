@@ -29,7 +29,12 @@ class AppManager {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: AppConstant.scopes);
 
-  Future<GoogleSignInAccount?> signIn() => _googleSignIn.signIn();
+  Future<GoogleSignInAccount?> signIn() async {
+    final account = await _googleSignIn.signIn();
+    authHeaders = await account?.authHeaders;
+    _currentUser = account;
+    return account;
+  }
 
   Future<void> signInSilently() async {
     final account = await _googleSignIn.signInSilently();
