@@ -239,6 +239,15 @@ class _ListMedia extends StatelessWidget {
   Widget build(BuildContext context) {
     final galleyState = context.watch<CloudCubit>().state;
     final data = dataSource(galleyState);
+    if (data.isEmpty) {
+      return Center(
+        child: Image.asset(
+          'assets/icon/empty_icon.png',
+          scale: 3,
+          color: Colors.grey,
+        ),
+      );
+    }
     return LoadingOverlay(
       isLoading: galleyState.isLoading,
       child: GridView.builder(

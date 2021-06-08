@@ -11,6 +11,38 @@ A new Gallery Flutter project, using Google Photo API
 - Ruby 2.7.2
 - Pod 1.10.1
 
+### Features
+- The simple manager the photos/videos in the device
+- The simple manager the photos/videos on the Cloud(Use Google Photo API)
+- Create the album   
+- Upload a photo/video
+- Preview Photo/Video
+
+### Technique
+- Structure project for Flutter
+- Config evironment(Dev,Pro, Stg)
+- Setup multiple language(vn, en) & Sample
+- Setup Light/Dart Theme
+- Logic code used BLOC & Sample
+- Core network use Dio & Sample
+- Setup Lint Rules by Google rules
+- Login by Google
+
+## Plugins
+
+- Flutter 2.0.6
+- intl: ^0.17.0
+- equatable: ^2.0.2
+- flutter_bloc: ^7.0.1
+- dio: ^4.0.0
+- pretty_dio_logger: ^1.1.1
+- cached_network_image: ^3.0.0
+- pedantic: ^1.11.0
+- google_sign_in: ^5.0.2
+- image_picker: ^0.7.4
+- video_player: ^2.1.5
+
+
 ### Run Gallery Project
 
 1. Start a iOS/Android simulator
@@ -81,32 +113,6 @@ flutter build ios --release --flavor dev
 flutter build ios --release --flavor stg
 flutter build ios --release --flavor pro
 ```
-
-### Features
-- The simple manager the photos/videos in the device
-- The simple manager the photos/videos on the Cloud(Use Google Photo API)
-- Create/Delete the album   
-- Upload/Delete/View the photo/video
-
-### Technique
-- Structure project for Flutter
-- Config evironment(Dev,Pro, Stg)
-- Setup multiple language(vn, en) & Sample
-- Setup Light/Dart Theme
-- Logic code used BLOC & Sample
-- Core network use Dio & Sample
-- Setup Lint Rules by Google rules
-
-## Plugins
-
-- Flutter 2.0.6
-- intl: ^0.17.0
-- equatable: ^2.0.2
-- flutter_bloc: ^7.0.1
-- dio: ^4.0.0
-- pretty_dio_logger: ^1.1.1
-- cached_network_image: ^3.0.0
-- pedantic: ^1.11.0
 
 ## Reference
 - [Flutter website](https://flutter.dev/)

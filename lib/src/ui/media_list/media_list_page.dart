@@ -57,17 +57,18 @@ class _MediaListPageState extends State<MediaListPage> {
     return LoadingOverlay(
       isLoading: mediaState.isLoading,
       child: Scaffold(
-        
-          floatingActionButton: _cubit.isCloud ? FloatingActionButton(
-              elevation: 5.0,
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              backgroundColor: Theme.of(context).primaryColor,
-              onPressed: () {
-                _onImageButtonPressed(ImageSource.gallery);
-              }) : null,
+          floatingActionButton: _cubit.isCloud
+              ? FloatingActionButton(
+                  elevation: 5.0,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  onPressed: () {
+                    _onImageButtonPressed(ImageSource.gallery);
+                  })
+              : null,
           appBar: GLAppBar(
             isEnableBackButton: true,
             title: mediaState.album.name,
@@ -75,31 +76,41 @@ class _MediaListPageState extends State<MediaListPage> {
               Navigator.of(context).pop(_cubit.hasChange);
             },
           ),
-          body: GridView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: AppConstant.mediaCrossAxisCount,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5),
-            itemBuilder: (context, index) {
-              final item = mediaState.album.items[index];
-              if (_cubit.isCloud) {
-                return GLMedia(
-                  null,
-                  null,
-                  () => _onTapMedia(context, item),
-                  coverPhoto: item.baseUrl,
-                );
-              } else {
-                return GLMedia(
-                  item,
-                  thumbMediaOption((w ~/ AppConstant.mediaCrossAxisCount)),
-                  () => _onTapMedia(context, item),
-                );
-              }
-            },
-            itemCount: mediaState.album.items.length,
-          )),
+          body: mediaState.album.items.isEmpty
+              ? Center(
+                  child: Image.asset(
+                    'assets/icon/empty_icon.png',
+                    scale: 3,
+                    color: Colors.grey,
+                  ),
+                )
+              : GridView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: AppConstant.mediaCrossAxisCount,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5),
+                  itemBuilder: (context, index) {
+                    final item = mediaState.album.items[index];
+                    if (_cubit.isCloud) {
+                      return GLMedia(
+                        null,
+                        null,
+                        () => _onTapMedia(context, item),
+                        coverPhoto: item.baseUrl,
+                      );
+                    } else {
+                      return GLMedia(
+                        item,
+                        thumbMediaOption(
+                            (w ~/ AppConstant.mediaCrossAxisCount)),
+                        () => _onTapMedia(context, item),
+                      );
+                    }
+                  },
+                  itemCount: mediaState.album.items.length,
+                )),
     );
   }
 
