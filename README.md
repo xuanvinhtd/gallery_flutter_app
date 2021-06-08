@@ -2,6 +2,8 @@
 
 A new Gallery Flutter project, using Google Photo API
 
+- [The video demo this app](https://youtu.be/NEsSlzku0Mo)
+
 ### Gallery Project Environment
 
 - Environment: Flutter sdk: ">=2.12.0 <3.0.0"
@@ -17,8 +19,6 @@ A new Gallery Flutter project, using Google Photo API
 - Create the album   
 - Upload a photo/video
 - Preview Photo/Video
-
-* [The video demo this app](https://youtu.be/NEsSlzku0Mo)
 
 ### Technique
 - Structure project for Flutter
